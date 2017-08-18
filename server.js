@@ -1,12 +1,13 @@
-const express             = require('express');
-const path                = require('path');
-const mustacheExpress     = require('mustache-express');
-const bodyParser          = require('body-parser');
-const expressValidator    = require('express-validator');
-const morgan              = require('morgan');
-const session             = require('express-session');
-const routes              = require('./routes/index');
-const app                 = express();
+const express          = require('express');
+const path             = require('path');
+const mustacheExpress  = require('mustache-express');
+const bodyParser       = require('body-parser');
+const expressValidator = require('express-validator');
+const morgan           = require('morgan');
+const session          = require('express-session');
+const fs               = require('fs');
+const routes           = require('./routes/index');
+const app              = express();
 
 app.engine("mustache", mustacheExpress);
 app.set("views", path.join(__dirname, "./views"));
