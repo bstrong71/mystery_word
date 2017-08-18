@@ -6,7 +6,7 @@ const expressValidator    = require('express-validator');
 const morgan              = require('morgan');
 const session             = require('express-session');
 const routes              = require('./routes/index');
-const app                 = exress();
+const app                 = express();
 
 app.engine("mustache", mustacheExpress);
 app.set("views", path.join(__dirname, "./views"));
