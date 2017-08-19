@@ -23,13 +23,25 @@ for (var i = 0; i < solutionLetters.length; i++) {
   };
   word.push(eachSoluLetter);
 };
-console.log({word});
 
 router.get("/", function(req, res) {
-  console.log("heeeeeeeeeelllllllllllllllloooooooooooooo");
-  res.render("game", {word});
+  console.log(word);
+  res.render("game", {word: word});
 })
 
+router.post("/", function(req, res) {
+  console.log(req.body.guess);
+  for (var j = 0; j < word.length; j++) {
+    if(req.body.guess === word[j].letter){
+      console.log("success");
+      word[j].guessed = true;
+    
+    } else {
+      console.log("did not match");
+    }
+  }
+  res.redirect("/");
+})
 
 
 module.exports = router;
