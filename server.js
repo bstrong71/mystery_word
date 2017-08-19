@@ -1,15 +1,15 @@
-const express          = require('express');
-const path             = require('path');
-const mustacheExpress  = require('mustache-express');
-const bodyParser       = require('body-parser');
-const expressValidator = require('express-validator');
-const morgan           = require('morgan');
-const session          = require('express-session');
-const fs               = require('fs');
-const routes           = require('./routes/index');
+const express          = require("express");
+const path             = require("path");
+const mustacheExpress  = require("mustache-express");
+const bodyParser       = require("body-parser");
+const expressValidator = require("express-validator");
+const morgan           = require("morgan");
+const session          = require("express-session");
+const fs               = require("fs");
+const routes           = require("./routes/index");
 const app              = express();
 
-app.engine("mustache", mustacheExpress);
+app.engine("mustache", mustacheExpress());
 app.set("views", path.join(__dirname, "./views"));
 app.set("view engine", "mustache");
 app.set("layout", "layout");
@@ -28,6 +28,12 @@ app.use(session({
 }));
 
 app.use(routes);
+
+app.get("/", function(req, res) {
+  console.log("helllllllllllllllloooooooooooooo");
+  res.send("workssss");
+});
+
 
 app.listen(3000, function() {
   console.log("This app is running on localhost: 3000");
