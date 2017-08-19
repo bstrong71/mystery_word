@@ -15,7 +15,7 @@ app.set("view engine", "mustache");
 app.set("layout", "layout");
 
 app.use(express.static(path.join(__dirname, "./public")));
-app.use(bodyParser.json);
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(expressValidator());
 
@@ -28,12 +28,6 @@ app.use(session({
 }));
 
 app.use(routes);
-
-app.get("/", function(req, res) {
-  console.log("helllllllllllllllloooooooooooooo");
-  res.send("workssss");
-});
-
 
 app.listen(3000, function() {
   console.log("This app is running on localhost: 3000");
