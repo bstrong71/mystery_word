@@ -1,7 +1,7 @@
 const express     = require("express");
 const router      = express.Router();
 const fs          = require("fs");
-const words       = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
+const wordPool    = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
 let randomWord;
 let eachSoluLetter;
 let word = [];
@@ -9,7 +9,7 @@ let lettersGuessed = [];
 
 function randomWordGen() {
   let n = Math.floor((Math.random() * 235000) + 1);
-  randomWord = words[n];
+  randomWord = wordPool[n];
 };
 
 randomWordGen();
@@ -27,7 +27,7 @@ for (var i = 0; i < solutionLetters.length; i++) {
 
 router.get("/", function(req, res) {
 
-  res.render("game", {word: word});
+  res.render("game", {word: word, lettersGuessed: lettersGuessed });
 })
 
 router.post("/", function(req, res) {
