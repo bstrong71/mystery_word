@@ -2,48 +2,59 @@ const express     = require("express");
 const router      = express.Router();
 const fs          = require("fs");
 const wordPool    = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
-let randomWord;
-let eachSoluLetter;
-let word = [];
-let lettersGuessed = [];
 
 function randomWordGen() {
   let n = Math.floor((Math.random() * 235000) + 1);
-  randomWord = wordPool[n];
+  return wordPool[n];
 };
 
-randomWordGen();
-
-let solutionLetters = randomWord.split("");
-for (var i = 0; i < solutionLetters.length; i++) {
-  console.log(solutionLetters[i]);
-  let eachSoluLetter = {
-    letter: solutionLetters[i],
-    guessed: false,
-    placeholder: "_"
+function startGame () {
+  let randomWord = randomWordGen();
+  let solutionLetters = randomWord.split("");
+  let arr = [];
+  for (var i = 0; i < solutionLetters.length; i++) {
+    console.log(solutionLetters[i]);
+    let eachSoluLetter = {
+      letter: solutionLetters[i],
+      guessed: false,
+      placeholder: "_"
+    };
+    arr.push(eachSoluLetter);
   };
-  word.push(eachSoluLetter);
-};
+  return arr;
+}
 
 router.get("/", function(req, res) {
 
-  res.render("game", {word: word, lettersGuessed: lettersGuessed });
+  let game = req.session.game;
+
+  // Check for current game
+  // If not current game, create a new one
+  if (!game) {
+    game = req.session.game = {};
+    game.word = startGame();
+    game.lettersGuessed = [];
+  }
+
+  res.render("game", {word: game.word, lettersGuessed: game.lettersGuessed });
 })
 
 router.post("/", function(req, res) {
+
+  let game = req.session.game;
+
   console.log(req.body.guess);
   let guessObj = {guess: req.body.guess};
-  for (var j = 0; j < word.length; j++) {
-    if(guessObj.guess === word[j].letter){
+  for (var j = 0; j < game.word.length; j++) {
+    if(guessObj.guess === game.word[j].letter){
       console.log("success");
-      word[j].guessed = true;
+      game.word[j].guessed = true;
     } else {
       console.log("did not match");
-
     }
   }
-  lettersGuessed.push(guessObj);
-  console.log(lettersGuessed);
+  game.lettersGuessed.push(guessObj);
+  console.log(game.lettersGuessed);
 
   res.redirect("/");
 })
