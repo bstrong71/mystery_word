@@ -30,5 +30,5 @@ app.use(session({
 app.use(routes);
 
 app.listen(3000, function() {
-  console.log("This app is running on localhost: 3000");
+  console.log("This app is running on localhost:3000");
 });

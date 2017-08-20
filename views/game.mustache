@@ -1,12 +1,14 @@
 <div class="game">
   <div class="challengeSection">
     {{#word}}
+
       {{^guessed}}
         {{placeholder}}
       {{/guessed}}
       {{#guessed}}
         {{letter}}
       {{/guessed}}
+
     {{/word}}
   </div>
   <div class="guessSection">
@@ -16,6 +18,6 @@
     </form>
   </div>
   <div class="statusSection">
-
+  
   </div>
 </div>

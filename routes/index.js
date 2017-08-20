@@ -5,6 +5,7 @@ const words       = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCas
 let randomWord;
 let eachSoluLetter;
 let word = [];
+let lettersGuessed = [];
 
 function randomWordGen() {
   let n = Math.floor((Math.random() * 235000) + 1);
@@ -25,21 +26,25 @@ for (var i = 0; i < solutionLetters.length; i++) {
 };
 
 router.get("/", function(req, res) {
-  console.log(word);
+
   res.render("game", {word: word});
 })
 
 router.post("/", function(req, res) {
   console.log(req.body.guess);
+  let guessObj = {guess: req.body.guess};
   for (var j = 0; j < word.length; j++) {
-    if(req.body.guess === word[j].letter){
+    if(guessObj.guess === word[j].letter){
       console.log("success");
       word[j].guessed = true;
-    
     } else {
       console.log("did not match");
+
     }
   }
+  lettersGuessed.push(guessObj);
+  console.log(lettersGuessed);
+
   res.redirect("/");
 })
 
