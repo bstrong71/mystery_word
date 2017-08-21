@@ -18,9 +18,11 @@
     </form>
   </div>
   <div class="statusSection">
-    <p>Letters Guessed: </p>
+    <p>Letters Guessed:</p>
     {{#lettersGuessed}}
       {{guess}}
     {{/lettersGuessed}}
+    <p>Guesses Left: {{tries}}</p>
+
   </div>
 </div>
