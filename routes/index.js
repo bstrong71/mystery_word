@@ -84,14 +84,20 @@ router.post("/", function(req, res) {
           return;
         } else {}
     }
-    console.log("eachSoluLetter " + eachSoluLetter);
-    console.log("game.word " + game.word);
-    console.log("game.word.placeholder "+ game.word.placeholder);
+    console.log("game.word.length  " + game.word.length);
+    let noMoreGuesses = true;
+    for (var k = 0; k < game.word.length; k++) {
+      if(game.word[k].guessed === false) {
+        noMoreGuesses = false;
+      }
+    }
 
-    
+    if(noMoreGuesses) {
+      res.render("winner");
+    } else {
+      res.redirect("/");
+    }
 
-
-  res.redirect("/");
 })
 
 
