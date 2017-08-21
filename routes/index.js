@@ -2,6 +2,7 @@ const express     = require("express");
 const router      = express.Router();
 const fs          = require("fs");
 const wordPool    = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
+let eachSoluLetter = {};
 
 // returns random word from internal dictionary//
 function randomWordGen() {
@@ -10,12 +11,13 @@ function randomWordGen() {
 };
 // returns word to be guessed to start game //
 function startGame () {
+  eachSoluLetter = {};
   let randomWord = randomWordGen();
   let solutionLetters = randomWord.split("");
   let arr = [];
   for (var i = 0; i < solutionLetters.length; i++) {
     console.log(solutionLetters[i]);
-    let eachSoluLetter = {
+      eachSoluLetter = {
       letter: solutionLetters[i],
       guessed: false,
       placeholder: "_"
@@ -36,7 +38,12 @@ router.get("/", function(req, res) {
     game.lettersGuessed = [];
     game.tries = 8;
   }
-  res.render("game", {word: game.word, lettersGuessed: game.lettersGuessed, tries: game.tries, gameOver: "Game Over", youWin: "You Win!"});
+  res.render("game", {word: game.word, lettersGuessed: game.lettersGuessed, tries: game.tries});
+})
+
+router.get("/reset", function(req, res){
+  req.session.destroy();
+  res.redirect("/");
 })
 
 router.post("/", function(req, res) {
@@ -46,24 +53,43 @@ router.post("/", function(req, res) {
   let guessObj = {guess: req.body.guess};
   let correctGuessMade = 0;
   let ltrArray = game.lettersGuessed;
+  let oops = "You alread guessed that letter. Guess again.";
+  console.log(guessObj.guess);
+  console.log(ltrArray);
+  // change uppercase guess to lowercase //
+  guessObj.guess = guessObj.guess.toLowerCase();
 
-
-  for (var j = 0; j < game.word.length; j++) {
-    if(guessObj.guess === game.word[j].letter){
-      console.log("success");
-      game.word[j].guessed = true;
-      correctGuessMade += 1;
-    } else {
-      console.log("did not match");
-    }
-  }
-  game.lettersGuessed.push(guessObj);
-// adjust number of guesses left //
-  if(correctGuessMade === 0){
-    game.tries -= 1;
+  if(ltrArray.indexOf(guessObj.guess) !== -1) {
+    console.log("Guess again");
+    res.render("game", {word: game.word, lettersGuessed: game.lettersGuessed, tries: game.tries, oops: oops});
   } else {
-    game.tries = game.tries;
-  }
+
+    for (var j = 0; j < game.word.length; j++) {
+      if(guessObj.guess === game.word[j].letter){
+        console.log("success");
+        game.word[j].guessed = true;
+        correctGuessMade += 1;
+      } else {
+        console.log("did not match");
+      }
+    }
+    game.lettersGuessed.push(guessObj.guess);
+  // adjust number of guesses left //
+    if((correctGuessMade === 0) && (game.tries > 1)){
+      game.tries -= 1;
+    } else if ((correctGuessMade === 0) && (game.tries === 1)){
+        game.tries -= 1;
+      } else if ((correctGuessMade === 0) && (game.tries === 0)){
+          res.render("loser");
+          return;
+        } else {}
+    }
+    console.log("eachSoluLetter " + eachSoluLetter);
+    console.log("game.word " + game.word);
+    console.log("game.word.placeholder "+ game.word.placeholder);
+
+    
+
 
   res.redirect("/");
 })

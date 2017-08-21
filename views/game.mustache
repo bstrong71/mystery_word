@@ -13,16 +13,18 @@
   </div>
   <div class="guessSection">
     <form action="/" method="post">
-      <input type="text" name="guess" placeholder="Guess 1 Letter" autofocus>
+      <input type="text" name="guess" maxlength="1" placeholder="Guess 1 Letter" autofocus>
       <button type="submit">Make a Guess</button>
     </form>
   </div>
   <div class="statusSection">
     <p>Letters Guessed:</p>
     {{#lettersGuessed}}
-      {{guess}}
+      {{.}}
     {{/lettersGuessed}}
     <p>Guesses Left: {{tries}}</p>
-
+    {{#oops}}
+      {{.}}
+    {{/oops}}
   </div>
 </div>
