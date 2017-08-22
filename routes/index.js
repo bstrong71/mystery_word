@@ -16,7 +16,6 @@ function startGame () {
   let solutionLetters = randomWord.split("");
   let arr = [];
   for (var i = 0; i < solutionLetters.length; i++) {
-    console.log(solutionLetters[i]);
       eachSoluLetter = {
       letter: solutionLetters[i],
       guessed: false,
@@ -28,7 +27,6 @@ function startGame () {
 }
 
 router.get("/", function(req, res) {
-
   let game = req.session.game;
   // Checks for current game //
   // If no current game, create a new one //
@@ -40,37 +38,30 @@ router.get("/", function(req, res) {
   }
   res.render("game", {word: game.word, lettersGuessed: game.lettersGuessed, tries: game.tries});
 })
-
+// reset the session after game //
 router.get("/reset", function(req, res){
   req.session.destroy();
   res.redirect("/");
 })
 
 router.post("/", function(req, res) {
-
   let game = req.session.game;
-
   let guessObj = {guess: req.body.guess};
   let correctGuessMade = 0;
   let ltrArray = game.lettersGuessed;
   let oops = "You alread guessed that letter. Guess again.";
-  console.log(guessObj.guess);
-  console.log(ltrArray);
   // change uppercase guess to lowercase //
   guessObj.guess = guessObj.guess.toLowerCase();
 
   if(ltrArray.indexOf(guessObj.guess) !== -1) {
-    console.log("Guess again");
     res.render("game", {word: game.word, lettersGuessed: game.lettersGuessed, tries: game.tries, oops: oops});
   } else {
-
     for (var j = 0; j < game.word.length; j++) {
       if(guessObj.guess === game.word[j].letter){
-        console.log("success");
         game.word[j].guessed = true;
         correctGuessMade += 1;
       } else {
-        console.log("did not match");
+        
       }
     }
     game.lettersGuessed.push(guessObj.guess);
@@ -79,26 +70,24 @@ router.post("/", function(req, res) {
       game.tries -= 1;
     } else if ((correctGuessMade === 0) && (game.tries === 1)){
         game.tries -= 1;
+        res.render("loser");
+        return;
       } else if ((correctGuessMade === 0) && (game.tries === 0)){
           res.render("loser");
           return;
         } else {}
     }
-    console.log("game.word.length  " + game.word.length);
     let noMoreGuesses = true;
     for (var k = 0; k < game.word.length; k++) {
       if(game.word[k].guessed === false) {
         noMoreGuesses = false;
       }
     }
-
     if(noMoreGuesses) {
       res.render("winner");
     } else {
       res.redirect("/");
     }
-
 })
-
 
 module.exports = router;
